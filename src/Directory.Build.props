@@ -1,0 +1,48 @@
+<Project>
+  <PropertyGroup>
+  <Authors>Simon Pflaum</Authors>
+    <Company>devsmn</Company>
+    <PackageProjectUrl>https://github.com/devsmn/net-toolkit</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/devsmn/net-toolkit</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>© 2025 Simon Pflaum</Copyright>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	<RootOutputDir>$(SolutionDir)output</RootOutputDir> 
+    <DebugType>portable</DebugType>
+
+    <Version>1.0.0</Version> 
+	
+  </PropertyGroup>
+  
+  
+	  <Target Name="CopyPackagesToOutput" AfterTargets="Pack">
+    <!-- NuGet places packages in $(PackageOutputPath), which defaults to $(OutputPath) -->
+    <PropertyGroup>
+      <_ActualPackageOutputPath>$(PackageOutputPath)</_ActualPackageOutputPath>
+      <!-- Ensure we have a fallback -->
+      <_ActualPackageOutputPath Condition="'$(_ActualPackageOutputPath)' == ''">$(OutputPath)</_ActualPackageOutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_PackagesToCopy Include="$(_ActualPackageOutputPath)\*.nupkg" />
+      <_PackagesToCopy Include="$(_ActualPackageOutputPath)\*.snupkg" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(RootOutputDir)" Condition="!Exists('$(RootOutputDir)')" />
+    <Copy
+      SourceFiles="@(_PackagesToCopy)"
+      DestinationFolder="$(RootOutputDir)"
+      SkipUnchangedFiles="true"
+      Condition=" '@(_PackagesToCopy)' != '' " />
+
+    <Message Text="Copied @(_PackagesToCopy) → $(RootOutputDir)" Importance="High" Condition=" '@(_PackagesToCopy)' != '' " />
+    <Message Text="No NuGet packages found in $(_ActualPackageOutputPath)" Importance="High" Condition=" '@(_PackagesToCopy)' == '' " />
+  </Target>
+
+
+</Project>

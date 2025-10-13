@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Title>devsmn-net-toolkit: Service implementations</Title>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\Devsmn.Common.DataModel\Devsmn.Common.DataModel.csproj" />
+    <ProjectReference Include="..\..\Diagnostics\Devsmn.Common.Diagnostics\Devsmn.Common.Diagnostics.csproj" />
+    <ProjectReference Include="..\Devsmn.Common.Service.Core\Devsmn.Common.Service.Core.csproj" />
+  </ItemGroup>
+
+</Project>

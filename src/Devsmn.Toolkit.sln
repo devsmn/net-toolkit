@@ -1,0 +1,78 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{A1E9A599-C66A-472D-818B-BD43FD8E580A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{59AA5A90-B044-45C9-A8A2-07E979F6B42E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dignostics", "Dignostics", "{E853B83C-0772-4531-AFAB-7328819DD2DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devsmn.Common.Data.Core", "Common\Data\Devsmn.Common.Data.Core\Devsmn.Common.Data.Core.csproj", "{572481DD-D89D-4232-91A9-B0A6CCC77FEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devsmn.Common.Data", "Common\Data\Devsmn.Common.Data\Devsmn.Common.Data.csproj", "{FFBC8704-62ED-4C41-86D1-C3361596F13F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{DBFD5917-0F86-47EC-853D-5A9B2A0D302F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devsmn.Common.Service.Core", "Common\Service\Devsmn.Common.Service.Core\Devsmn.Common.Service.Core.csproj", "{E563AFC9-FDE0-497E-AF42-B9609EF3BC49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devsmn.Common.Service", "Common\Service\Devsmn.Common.Service\Devsmn.Common.Service.csproj", "{48A96BBE-DCC8-4FC7-B6EC-2DC76793F722}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devsmn.Common.DataModel", "Common\Data\Devsmn.Common.DataModel\Devsmn.Common.DataModel.csproj", "{340980DA-9D2E-4BB0-BBE4-92859B3597AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devsmn.Common.Diagnostics", "Common\Diagnostics\Devsmn.Common.Diagnostics\Devsmn.Common.Diagnostics.csproj", "{DA418512-2331-4154-92D8-9E0563ABB681}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devsmn.Common.Data.SQLite", "Common\Data\Devsmn.Common.Data.SQLite\Devsmn.Common.Data.SQLite.csproj", "{7056562C-3C68-4DE3-B227-1B3CC94D8416}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{572481DD-D89D-4232-91A9-B0A6CCC77FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{572481DD-D89D-4232-91A9-B0A6CCC77FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{572481DD-D89D-4232-91A9-B0A6CCC77FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{572481DD-D89D-4232-91A9-B0A6CCC77FEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFBC8704-62ED-4C41-86D1-C3361596F13F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFBC8704-62ED-4C41-86D1-C3361596F13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFBC8704-62ED-4C41-86D1-C3361596F13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFBC8704-62ED-4C41-86D1-C3361596F13F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E563AFC9-FDE0-497E-AF42-B9609EF3BC49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E563AFC9-FDE0-497E-AF42-B9609EF3BC49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E563AFC9-FDE0-497E-AF42-B9609EF3BC49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E563AFC9-FDE0-497E-AF42-B9609EF3BC49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48A96BBE-DCC8-4FC7-B6EC-2DC76793F722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48A96BBE-DCC8-4FC7-B6EC-2DC76793F722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48A96BBE-DCC8-4FC7-B6EC-2DC76793F722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48A96BBE-DCC8-4FC7-B6EC-2DC76793F722}.Release|Any CPU.Build.0 = Release|Any CPU
+		{340980DA-9D2E-4BB0-BBE4-92859B3597AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{340980DA-9D2E-4BB0-BBE4-92859B3597AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{340980DA-9D2E-4BB0-BBE4-92859B3597AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{340980DA-9D2E-4BB0-BBE4-92859B3597AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA418512-2331-4154-92D8-9E0563ABB681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA418512-2331-4154-92D8-9E0563ABB681}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA418512-2331-4154-92D8-9E0563ABB681}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA418512-2331-4154-92D8-9E0563ABB681}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7056562C-3C68-4DE3-B227-1B3CC94D8416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7056562C-3C68-4DE3-B227-1B3CC94D8416}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7056562C-3C68-4DE3-B227-1B3CC94D8416}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7056562C-3C68-4DE3-B227-1B3CC94D8416}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{59AA5A90-B044-45C9-A8A2-07E979F6B42E} = {A1E9A599-C66A-472D-818B-BD43FD8E580A}
+		{E853B83C-0772-4531-AFAB-7328819DD2DE} = {A1E9A599-C66A-472D-818B-BD43FD8E580A}
+		{572481DD-D89D-4232-91A9-B0A6CCC77FEC} = {59AA5A90-B044-45C9-A8A2-07E979F6B42E}
+		{FFBC8704-62ED-4C41-86D1-C3361596F13F} = {59AA5A90-B044-45C9-A8A2-07E979F6B42E}
+		{DBFD5917-0F86-47EC-853D-5A9B2A0D302F} = {A1E9A599-C66A-472D-818B-BD43FD8E580A}
+		{E563AFC9-FDE0-497E-AF42-B9609EF3BC49} = {DBFD5917-0F86-47EC-853D-5A9B2A0D302F}
+		{48A96BBE-DCC8-4FC7-B6EC-2DC76793F722} = {DBFD5917-0F86-47EC-853D-5A9B2A0D302F}
+		{340980DA-9D2E-4BB0-BBE4-92859B3597AE} = {59AA5A90-B044-45C9-A8A2-07E979F6B42E}
+		{DA418512-2331-4154-92D8-9E0563ABB681} = {E853B83C-0772-4531-AFAB-7328819DD2DE}
+		{7056562C-3C68-4DE3-B227-1B3CC94D8416} = {59AA5A90-B044-45C9-A8A2-07E979F6B42E}
+	EndGlobalSection
+EndGlobal
