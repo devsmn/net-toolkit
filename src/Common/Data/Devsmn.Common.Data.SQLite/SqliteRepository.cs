@@ -76,7 +76,7 @@ namespace Devsmn.Common.Data.SQLite
         /// <param name="commandText"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        protected virtual TResult? Audit<TResult>(IContext context, string commandText, Func<SQLiteCommand, TResult> action)
+        public virtual TResult? Audit<TResult>(IContext context, string commandText, Func<SQLiteCommand, TResult> action)
         {
             if (string.IsNullOrEmpty(commandText)) {
                 context.Log(new Exception("Command text is empty"));
@@ -125,7 +125,7 @@ namespace Devsmn.Common.Data.SQLite
         /// <param name="context"></param>
         /// <param name="commandText"></param>
         /// <param name="action"></param>
-        protected virtual void Audit(IContext context, string commandText, Action<SQLiteCommand> action)
+        public virtual void Audit(IContext context, string commandText, Action<SQLiteCommand> action)
         {
             bool ownTransaction = false;
             SQLiteConnection? connection = null;
