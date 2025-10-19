@@ -28,5 +28,11 @@ namespace Devsmn.Common.Data.Core.DataProvider
         /// </summary>
         /// <returns></returns>
         IDataProviderAuthenticator RequestAuthenticator();
+
+        /// <summary>
+        /// Requests the <see cref="IDataIntegrityValidator"/> for this <see cref="IDataProxy"/>.
+        /// </summary>
+        /// <returns></returns>
+        IDataIntegrityValidator RequestIntegrityValidator();
     }
 }

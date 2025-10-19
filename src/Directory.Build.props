@@ -15,12 +15,12 @@
 	<RootOutputDir>$(SolutionDir)output</RootOutputDir> 
     <DebugType>portable</DebugType>
 
-    <Version>1.1.0</Version> 
+    <Version>1.2.0</Version> 
 	
   </PropertyGroup>
   
+  <Target Name="CopyPackagesToOutput" AfterTargets="Pack">
   
-	  <Target Name="CopyPackagesToOutput" AfterTargets="Pack">
     <!-- NuGet places packages in $(PackageOutputPath), which defaults to $(OutputPath) -->
     <PropertyGroup>
       <_ActualPackageOutputPath>$(PackageOutputPath)</_ActualPackageOutputPath>
