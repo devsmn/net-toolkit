@@ -8,13 +8,16 @@ namespace Devsmn.Common.Data.SQLite
     /// </summary>
     public abstract class SqliteRepository
     {
-        public bool IsValid { get; private set; }
+        public bool IsValid { get; private set; } = true;
 
         private SQLiteAsyncConnection? _database;
 
         protected SQLiteAsyncConnection? Database
         {
-            get {
+            get
+            {
+                _database ??= new SQLiteAsyncConnection(CreateConnectionString());
+
                 if (!IsValid)
                     throw new InvalidOperationException("Database is not in a valid state");
 
