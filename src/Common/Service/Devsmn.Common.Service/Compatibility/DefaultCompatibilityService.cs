@@ -18,7 +18,8 @@ namespace Devsmn.Common.Service
 
         public IEnumerable<VersionPatch> GetPatches<TFor>(IContext context)
         {
-            if (!_patches.TryGetValue(typeof(TFor), out List<VersionPatch>? list)) {
+            if (!_patches.TryGetValue(typeof(TFor), out List<VersionPatch>? list))
+            {
                 context.Log($"No patches available for type=[{typeof(TFor).FullName}]");
                 yield break;
             }

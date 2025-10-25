@@ -5,5 +5,6 @@
         void Log(string message);
         void Log(Exception exception);
         void Log(AggregateException aggregateException);
+        void Progress(double progress);
     }
 }

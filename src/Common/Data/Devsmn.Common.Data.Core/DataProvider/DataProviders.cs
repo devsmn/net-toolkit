@@ -17,10 +17,12 @@ namespace Devsmn.Common.Data.Core.DataProvider
         public static void Register<TRepository>(IContext context, TRepository repository)
             where TRepository : class, IRepository
         {
-            try {
+            try
+            {
                 Stores.Add(repository.GetType(), repository);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 context.Log(ex);
             }
         }
@@ -35,11 +37,14 @@ namespace Devsmn.Common.Data.Core.DataProvider
             if (Stores.Count == 0)
                 return;
 
-            foreach (IRepository repository in Stores.Values) {
-                try {
+            foreach (IRepository repository in Stores.Values)
+            {
+                try
+                {
                     await repository.CloseAsync();
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     context.Log("Unable to close repository: ");
                     context.Log(ex);
                 }
@@ -66,13 +71,16 @@ namespace Devsmn.Common.Data.Core.DataProvider
             ICompatibilityService compatService,
             Action loginFailed)
         {
-            foreach (IRepository instance in Stores.Values) {
-                try {
+            foreach (IRepository instance in Stores.Values)
+            {
+                try
+                {
                     await instance.InitializeAsync(context);
                     instance.RegisterPatches(context, compatService);
                     await instance.ExecutePatches(context, compatService);
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     context.Log(ex);
                     return false;
                 }
@@ -87,10 +95,11 @@ namespace Devsmn.Common.Data.Core.DataProvider
         /// <typeparam name="TRepository"></typeparam>
         /// <returns></returns>
         [DebuggerStepThrough]
-        internal static TRepository Resolve<TRepository>()
+        internal static TRepository? Resolve<TRepository>()
             where TRepository : IRepository
         {
-            foreach (KeyValuePair<Type, IRepository> store in Stores) {
+            foreach (KeyValuePair<Type, IRepository> store in Stores)
+            {
                 if (store.Value is TRepository value)
                     return value;
             }

@@ -12,7 +12,7 @@ namespace Devsmn.Common.Data.SQLite
 
         private SQLiteAsyncConnection? _database;
 
-        protected SQLiteAsyncConnection? Database
+        protected SQLiteAsyncConnection Database
         {
             get
             {
@@ -25,6 +25,10 @@ namespace Devsmn.Common.Data.SQLite
             }
         }
 
+        /// <summary>
+        /// Creates the connection string.
+        /// </summary>
+        /// <returns></returns>
         protected abstract SQLiteConnectionString CreateConnectionString();
 
         /// <summary>
@@ -34,15 +38,14 @@ namespace Devsmn.Common.Data.SQLite
         /// <exception cref="InvalidOperationException"></exception>
         public virtual async Task ValidateConnection()
         {
-            try {
-                if (_database == null)
-                    throw new InvalidOperationException("Database is not initialized");
-
+            try
+            {
                 // The only way to validate whether the cipher was correct is to execute a statement.
-                string table = await _database.ExecuteScalarAsync<string>("SELECT name FROM sqlite_master WHERE type='table' and name='META';");
+                string table = await Database.ExecuteScalarAsync<string>("SELECT name FROM sqlite_master WHERE type='table' and name='META';");
                 IsValid = !string.IsNullOrEmpty(table);
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 IsValid = false;
             }
 
@@ -50,123 +53,127 @@ namespace Devsmn.Common.Data.SQLite
                 throw new InvalidOperationException("Database is not in a valid state");
         }
 
+        /// <summary>
+        /// Validates the integrity of the database.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public virtual async Task<bool> ValidateIntegrity(IContext context)
         {
-            try {
-                if (_database == null)
-                    throw new InvalidOperationException("Database is not initialized");
-
-                string result = await _database.ExecuteScalarAsync<string>("PRAGMA integrity_check;");
+            try
+            {
+                string result = await Database.ExecuteScalarAsync<string>("PRAGMA integrity_check;");
                 context.Log($"Database integrity check=[{result}]");
 
                 return string.Equals(result, "ok", StringComparison.OrdinalIgnoreCase);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 context.Log(ex);
             }
 
             return false;
         }
 
+        
         /// <summary>
-        /// Executes the given <paramref name="action"/> for the provided <paramref name="commandText"/> while
-        /// observing exceptions.
-        /// <para>
-        /// The transaction is managed by this method, i.e. it is rolled-back automatically on errors.</para>
+        /// Executes the given <paramref name="action"/> by creating a <see cref="SQLiteCommand"/> based on the provided <paramref name="commandText"/>.
+        /// Do not call Commit, Rollback or any other transaction methods, as the transaction is handled within this method.
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="context"></param>
         /// <param name="commandText"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public virtual TResult? Audit<TResult>(IContext context, string commandText, Func<SQLiteCommand, TResult> action)
+        public virtual async Task<TResult?> AuditAsync<TResult>(IContext context, string commandText, Func<SQLiteCommand, TResult> action)
         {
-            if (string.IsNullOrEmpty(commandText)) {
+            TResult? result = default;
+
+            if (string.IsNullOrEmpty(commandText))
+            {
                 context.Log(new Exception("Command text is empty"));
-                return default;
+                return result;
             }
 
-            if (Database == null)
-                throw new InvalidOperationException("Database is not initialized");
+            await Database.RunInTransactionAsync(connection =>
+            {
+                result = action(connection.CreateCommand(commandText));
+            });
 
-            bool ownTransaction = false;
-            SQLiteConnection? connection = null;
-            bool success = true;
-
-            try {
-                connection = Database.GetConnection();
-                ownTransaction = !connection.IsInTransaction;
-
-                if (ownTransaction) {
-                    connection.BeginTransaction();
-                }
-
-                return action(connection.CreateCommand(commandText));
-            }
-            catch (Exception ex) {
-                if (ownTransaction) {
-                    connection?.Rollback();
-                }
-
-                success = false;
-                context.Log(ex);
-            }
-            finally {
-                if (success && ownTransaction) {
-                    connection?.Commit();
-                }
-            }
-
-            return default;
+            return result;
         }
 
-
         /// <summary>
-        /// Creates an <see cref="SQLiteCommand"/> based on the provided <paramref name="commandText"/>
-        /// and executes the given <paramref name="action"/>.
+        /// Executes the given <paramref name="action"/> by creating a <see cref="SQLiteCommand"/> based on the provided <paramref name="commandText"/>.
+        /// Do not call Commit, Rollback or any other transaction methods, as the transaction is handled within this method.
         /// </summary>
         /// <param name="context"></param>
         /// <param name="commandText"></param>
         /// <param name="action"></param>
-        public virtual void Audit(IContext context, string commandText, Action<SQLiteCommand> action)
+        /// <returns></returns>
+        public virtual async Task AuditAsync(IContext context, string commandText, Action<SQLiteCommand> action)
         {
-            bool ownTransaction = false;
-            SQLiteConnection? connection = null;
-
-            if (Database == null)
-                throw new InvalidOperationException("Database is not initialized");
-
-            try {
-                connection = Database.GetConnection();
-                ownTransaction = !connection.IsInTransaction;
-
-                if (ownTransaction) {
-                    connection.BeginTransaction();
-                }
-
-                action(connection.CreateCommand(commandText));
-
-                if (ownTransaction) {
-                    connection.Commit();
-                }
+            if (string.IsNullOrEmpty(commandText))
+            {
+                context.Log(new Exception("Command text is empty"));
+                return;
             }
-            catch (Exception ex) {
-                if (ownTransaction) {
-                    connection?.Rollback();
-                }
 
-                context.Log(ex);
-            }
+            await Database.RunInTransactionAsync(connection => action(connection.CreateCommand(commandText)));
         }
 
+        /// <summary>
+        /// Executes the given <paramref name="actions"/>.
+        /// Do not call Commit, Rollback or any other transaction methods, as the transaction is handled within this method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="actions"></param>
+        /// <returns></returns>
+        public virtual async Task AuditAsync(IContext context, params Action<ISQLiteConnection>[] actions)
+        {
+            await Database.RunInTransactionAsync(connection =>
+            {
+                foreach (var action in actions)
+                {
+                    action(connection);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Executes the given <paramref name="actions"/>.
+        /// Do not call Commit, Rollback or any other transaction methods, as the transaction is handled within this method.
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="actions"></param>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<TResult>> AuditAsync<TResult>(IContext context, params Func<ISQLiteConnection, TResult>[] actions)
+        {
+            List<TResult> result = new List<TResult>();
+
+            await Database.RunInTransactionAsync(connection =>
+            {
+                foreach (var action in actions)
+                {
+                    result.Add(action(connection));
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Closes the database.
+        /// </summary>
+        /// <returns></returns>
         public virtual async Task CloseAsync()
         {
-            if (_database == null)
+            if (!IsValid)
                 return;
 
-            await _database.CloseAsync();
-            _database = null;
+            await Database.CloseAsync();
+            IsValid = false;
         }
-
     }
 }
