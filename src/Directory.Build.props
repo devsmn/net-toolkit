@@ -14,8 +14,8 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	<RootOutputDir>$(SolutionDir)output</RootOutputDir> 
     <DebugType>portable</DebugType>
-
-    <Version>1.4.2</Version> 
+ 
+    <Version>1.5.0</Version> 
 	
   </PropertyGroup>
   
