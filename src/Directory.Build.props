@@ -15,7 +15,7 @@
 	<RootOutputDir>$(SolutionDir)output</RootOutputDir> 
     <DebugType>portable</DebugType>
  
-    <Version>1.5.0</Version> 
+    <Version>1.6.0</Version> 
 	
   </PropertyGroup>
   
@@ -29,8 +29,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <_PackagesToCopy Include="$(_ActualPackageOutputPath)\*.nupkg" />
-      <_PackagesToCopy Include="$(_ActualPackageOutputPath)\*.snupkg" />
+      <_PackagesToCopy Include="$(_ActualPackageOutputPath)\*$(Version)*.nupkg" />
+      <_PackagesToCopy Include="$(_ActualPackageOutputPath)\*$(Version)*.snupkg" />
     </ItemGroup>
 
     <MakeDir Directories="$(RootOutputDir)" Condition="!Exists('$(RootOutputDir)')" />

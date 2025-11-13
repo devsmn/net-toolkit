@@ -95,7 +95,7 @@ namespace Devsmn.Common.Data.Core.DataProvider
         /// <typeparam name="TRepository"></typeparam>
         /// <returns></returns>
         [DebuggerStepThrough]
-        internal static TRepository? Resolve<TRepository>()
+        public static TRepository? Resolve<TRepository>()
             where TRepository : IRepository
         {
             foreach (KeyValuePair<Type, IRepository> store in Stores)
