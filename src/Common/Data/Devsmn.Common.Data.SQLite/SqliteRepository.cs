@@ -1,5 +1,8 @@
-﻿using Devsmn.Common.Diagnostics;
+﻿using System.Data;
+using Devsmn.Common.Diagnostics;
 using SQLite;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static SQLite.SQLite3;
 
 namespace Devsmn.Common.Data.SQLite
 {
@@ -75,19 +78,22 @@ namespace Devsmn.Common.Data.SQLite
             return false;
         }
 
-        
+
         /// <summary>
         /// Executes the given <paramref name="action"/> by creating a <see cref="SQLiteCommand"/> based on the provided <paramref name="commandText"/>.
         /// Do not call Commit, Rollback or any other transaction methods, as the transaction is handled within this method.
         /// </summary>
-        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TData"></typeparam>
         /// <param name="context"></param>
         /// <param name="commandText"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public virtual async Task<TResult?> AuditAsync<TResult>(IContext context, string commandText, Func<SQLiteCommand, TResult> action)
+        public virtual async Task<SqliteResult<TData>?> AuditAsync<TData>(
+            IContext context,
+            string commandText,
+            Func<SQLiteCommand, TData> action)
         {
-            TResult? result = default;
+            SqliteResult<TData> result = new();
 
             if (string.IsNullOrEmpty(commandText))
             {
@@ -97,7 +103,8 @@ namespace Devsmn.Common.Data.SQLite
 
             await Database.RunInTransactionAsync(connection =>
             {
-                result = action(connection.CreateCommand(commandText));
+                SQLiteCommand command = connection.CreateCommand(commandText);
+                result.Data = action(command);
             });
 
             return result;
@@ -111,56 +118,82 @@ namespace Devsmn.Common.Data.SQLite
         /// <param name="commandText"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public virtual async Task AuditAsync(IContext context, string commandText, Action<SQLiteCommand> action)
+        public virtual async Task<SqliteResult> AuditAsync(IContext context, string commandText, Action<SQLiteCommand> action)
         {
+            SqliteResult result = new();
             if (string.IsNullOrEmpty(commandText))
             {
                 context.Log(new Exception("Command text is empty"));
-                return;
+                return result;
             }
 
-            await Database.RunInTransactionAsync(connection => action(connection.CreateCommand(commandText)));
-        }
-
-        /// <summary>
-        /// Executes the given <paramref name="actions"/>.
-        /// Do not call Commit, Rollback or any other transaction methods, as the transaction is handled within this method.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="actions"></param>
-        /// <returns></returns>
-        public virtual async Task AuditAsync(IContext context, params Action<ISQLiteConnection>[] actions)
-        {
-            await Database.RunInTransactionAsync(connection =>
+            await Task.Run(() =>
             {
-                foreach (var action in actions)
+                SQLiteConnectionWithLock connection = Database.GetConnection();
+                using (connection.Lock())
                 {
-                    action(connection);
-                }
-            });
-        }
-
-        /// <summary>
-        /// Executes the given <paramref name="actions"/>.
-        /// Do not call Commit, Rollback or any other transaction methods, as the transaction is handled within this method.
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="actions"></param>
-        /// <returns></returns>
-        public virtual async Task<IEnumerable<TResult>> AuditAsync<TResult>(IContext context, params Func<ISQLiteConnection, TResult>[] actions)
-        {
-            List<TResult> result = new List<TResult>();
-
-            await Database.RunInTransactionAsync(connection =>
-            {
-                foreach (var action in actions)
-                {
-                    result.Add(action(connection));
+                    SQLiteCommand command = connection.CreateCommand(commandText);
+                    connection.RunInTransaction(() => action(command));
+                    result.RowId = SQLite3.LastInsertRowid(connection.Handle);
                 }
             });
 
             return result;
+        }
+
+        /// <summary>
+        /// Executes the given <paramref name="actions"/>.
+        /// Do not call Commit, Rollback or any other transaction methods, as the transaction is handled within this method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="actions"></param>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<SqliteResult>> AuditAsync(IContext context, params Action<ISQLiteConnection>[] actions)
+        {
+            List<SqliteResult> results = new();
+
+            await Task.Run(() =>
+            {
+                SQLiteConnectionWithLock connection = Database.GetConnection();
+
+                foreach (var action in actions)
+                {
+                    action(connection);
+
+                    SqliteResult result = new();
+                    result.RowId = SQLite3.LastInsertRowid(connection.Handle);
+                    results.Add(result);
+                }
+
+            });
+
+            return results;
+        }
+
+        /// <summary>
+        /// Executes the given <paramref name="actions"/>.
+        /// Do not call Commit, Rollback or any other transaction methods, as the transaction is handled within this method.
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="actions"></param>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<SqliteResult<TData>>> AuditAsync<TData>(IContext context, params Func<ISQLiteConnection, TData>[] actions)
+        {
+            List<SqliteResult<TData>> results = new();
+
+            await Database.RunInTransactionAsync(connection =>
+            {
+                foreach (var action in actions)
+                {
+                    SqliteResult<TData> result = new();
+                    result.Data = action(connection);
+
+                    results.Add(result);
+                }
+            });
+
+            return results;
         }
 
         /// <summary>
