@@ -3,18 +3,18 @@
     public interface IDataProviderAuthenticator
     {
         /// <summary>
-        /// Authenticates the data provider with the given <paramref name="cipher"/>.
+        /// Authenticates the data provider with the given <paramref name="passkey"/>.
         /// </summary>
-        /// <param name="cipher"></param>
+        /// <param name="passkey"></param>
         /// <returns></returns>
-        Task<bool> AuthenticateAsync(string cipher);
+        Task<bool> AuthenticateAsync(string passkey);
 
         /// <summary>
-        /// Authenticates the data provider at the given location with the provided <paramref name="cipher"/>.
+        /// Authenticates the data provider at the given location with the provided <paramref name="passkey"/>.
         /// </summary>
-        /// <param name="cipher"></param>
-        /// <param name="dbPath"></param>
+        /// <param name="passkey"></param>
+        /// <param name="localPath"></param>
         /// <returns></returns>
-        Task<bool> AuthenticateAsync(string cipher, string dbPath);
+        Task<bool> AuthenticateAsync(string passkey, string localPath);
     }
 }

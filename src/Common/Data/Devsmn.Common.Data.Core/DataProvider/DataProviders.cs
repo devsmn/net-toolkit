@@ -98,9 +98,21 @@ namespace Devsmn.Common.Data.Core.DataProvider
         public static TRepository? Resolve<TRepository>()
             where TRepository : IRepository
         {
+            return Resolve<TRepository>(null);
+        }
+
+        /// <summary>
+        /// Retrieves the instance for the given repository.
+        /// </summary>
+        /// <typeparam name="TRepository"></typeparam>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public static TRepository? Resolve<TRepository>(DataProviderRequestParameter? requestParameter)
+            where TRepository : IRepository
+        {
             foreach (KeyValuePair<Type, IRepository> store in Stores)
             {
-                if (store.Value is TRepository value)
+                if (store.Value is TRepository value && value.CanResolveFor(requestParameter))
                     return value;
             }
 

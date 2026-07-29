@@ -7,7 +7,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>© 2025 Simon Pflaum</Copyright>
+    <Copyright>© 2026 Simon Pflaum</Copyright>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
@@ -15,7 +15,7 @@
 	<RootOutputDir>$(SolutionDir)output</RootOutputDir> 
     <DebugType>portable</DebugType>
  
-    <Version>1.7.0</Version> 
+    <Version>1.8.0</Version> 
 	 
   </PropertyGroup>
   

@@ -11,6 +11,13 @@ namespace Devsmn.Common.Data.Core
         bool IsValid { get; }
 
         /// <summary>
+        /// Determines whether the repository can be resolved based on the given <paramref name="parameter"/>.
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        bool CanResolveFor(DataProviderRequestParameter? parameter);
+
+        /// <summary>
         /// Asynchronously initializes the repository.
         /// <para>
         /// This can be used to initialize required resources.</para>
